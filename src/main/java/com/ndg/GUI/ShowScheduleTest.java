@@ -1,0 +1,242 @@
+package com.ndg.GUI;
+
+import com.ndg.Controllers.ScheduleTestController;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
+public class ShowScheduleTest extends ParentPanel {
+    private final JPanel panelShowInfo;
+    private final JLabel lbStuCode, lbFullName, lbSex, lbDOB, lbAddress, lbClass, lbMajor, lbKhoa;
+    private final JLabel lbShowStuCode, lbShowFullName, lbShowDOB, lbShowSex, lbShowAddress, lbShowCLass;
+    private final JLabel lbShowMajor, lbShowKhoa;
+    private final JScrollPane scrollPane;
+
+    public ShowScheduleTest(@NotNull JPanel panel, int idLogin) {
+        super(panel.getWidth(), panel.getHeight(), idLogin);
+
+        panelShowInfo = new JPanel(null);
+        panelShowInfo.setBounds(
+                (panel.getWidth() - 400) / 2,
+                panel.getHeight() / 20,
+                400,
+                280
+        );
+        panelShowInfo.setBorder(BorderFactory.createLineBorder(Color.red, 20));
+
+        lbStuCode = new JLabel("Mã sinh viên");
+        lbStuCode.setBounds(
+                panelShowInfo.getX() + panelShowInfo.getWidth() / 4,
+                panelShowInfo.getY() + 20,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbFullName = new JLabel("Tên sinh viên");
+        lbFullName.setBounds(
+                lbStuCode.getX(),
+                lbStuCode.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbSex = new JLabel("Giới tính");
+        lbSex.setBounds(
+                lbFullName.getX(),
+                lbFullName.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbDOB = new JLabel("Ngày sinh");
+        lbDOB.setBounds(
+                lbSex.getX(),
+                lbSex.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbAddress = new JLabel("Địa chỉ");
+        lbAddress.setBounds(
+                lbDOB.getX(),
+                lbDOB.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbClass = new JLabel("Lớp");
+        lbClass.setBounds(
+                lbAddress.getX(),
+                lbAddress.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbMajor = new JLabel("Ngành");
+        lbMajor.setBounds(
+                lbClass.getX(),
+                lbClass.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbKhoa = new JLabel("Khoa");
+        lbKhoa.setBounds(
+                lbMajor.getX(),
+                lbMajor.getY() + 30,
+                default_width_component - 50,
+                default_height_component
+        );
+
+        lbShowStuCode = new JLabel("UnKnown");
+        lbShowStuCode.setBounds(
+                lbStuCode.getX() + lbStuCode.getWidth() + 10,
+                lbStuCode.getY(),
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowFullName = new JLabel("UnKnown");
+        lbShowFullName.setBounds(
+                lbShowStuCode.getX(),
+                lbShowStuCode.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowSex = new JLabel("UnKnown");
+        lbShowSex.setBounds(
+                lbShowFullName.getX(),
+                lbShowFullName.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowDOB = new JLabel("UnKnown");
+        lbShowDOB.setBounds(
+                lbShowSex.getX(),
+                lbShowSex.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowAddress = new JLabel("UnKnown");
+        lbShowAddress.setBounds(
+                lbShowDOB.getX(),
+                lbShowDOB.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowCLass = new JLabel("UnKnown");
+        lbShowCLass.setBounds(
+                lbShowAddress.getX(),
+                lbShowAddress.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowMajor = new JLabel("UnKnown");
+        lbShowMajor.setBounds(
+                lbShowCLass.getX(),
+                lbShowCLass.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        lbShowKhoa = new JLabel("UnKnown");
+        lbShowKhoa.setBounds(
+                lbShowMajor.getX(),
+                lbShowMajor.getY() + 30,
+                default_width_component,
+                default_height_component
+        );
+
+        Object[][] data = {};
+        String[] columns = {"STT", "Tên môn học", "Ngày thi", "Giờ bắt đầu", "Phút", "Phòng thi", "Hình thức thi"};
+
+        DefaultTableModel tableModel = new DefaultTableModel(data, columns);
+        JTable tableShowSub = new JTable(tableModel);
+        tableShowSub.setEnabled(false);
+
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        for (int i = 0; i < tableShowSub.getColumnCount(); i++) {
+            tableShowSub.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+        }
+        tableShowSub.getColumnModel().getColumn(1).setPreferredWidth(150);
+
+        scrollPane = new JScrollPane(
+                tableShowSub,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setBounds(
+                100,
+                panelShowInfo.getY() + panelShowInfo.getHeight() + 50,
+                panel.getWidth() - 100 * 2,
+                300
+        );
+
+        new ScheduleTestController(this);
+    }
+
+    @Override
+    public void show(@NotNull JPanel panel) {
+        super.show(panel);
+        panel.add(lbStuCode);
+        panel.add(lbShowStuCode);
+        panel.add(lbFullName);
+        panel.add(lbShowFullName);
+        panel.add(lbSex);
+        panel.add(lbShowSex);
+        panel.add(lbDOB);
+        panel.add(lbShowDOB);
+        panel.add(lbAddress);
+        panel.add(lbShowAddress);
+        panel.add(lbClass);
+        panel.add(lbShowCLass);
+        panel.add(lbMajor);
+        panel.add(lbShowMajor);
+        panel.add(lbKhoa);
+        panel.add(lbShowKhoa);
+        panel.add(panelShowInfo);
+        panel.add(scrollPane);
+    }
+
+    public JLabel getLbShowStuCode() {
+        return lbShowStuCode;
+    }
+
+    public JLabel getLbShowFullName() {
+        return lbShowFullName;
+    }
+
+    public JLabel getLbShowDOB() {
+        return lbShowDOB;
+    }
+
+    public JLabel getLbShowSex() {
+        return lbShowSex;
+    }
+
+    public JLabel getLbShowAddress() {
+        return lbShowAddress;
+    }
+
+    public JLabel getLbShowCLass() {
+        return lbShowCLass;
+    }
+
+    public JLabel getLbShowMajor() {
+        return lbShowMajor;
+    }
+
+    public JLabel getLbShowKhoa() {
+        return lbShowKhoa;
+    }
+}
