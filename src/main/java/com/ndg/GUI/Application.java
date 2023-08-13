@@ -2,7 +2,6 @@ package com.ndg.GUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -72,8 +71,15 @@ public class Application extends JFrame implements IApplication {
                         new JPanel(),
                         "Bạn có muốn đăng xuất không?",
                         "Thông báo",
-                        JOptionPane.YES_NO_OPTION
+                        JOptionPane.OK_CANCEL_OPTION
                 );
+
+                if (choose == JOptionPane.YES_OPTION) {
+                    getContentPane().removeAll();
+                    getContentPane().add(new LoginUI(-1));
+                    getContentPane().revalidate();
+                    getContentPane().repaint();
+                }
             }
         });
 
@@ -83,7 +89,7 @@ public class Application extends JFrame implements IApplication {
             public void actionPerformed(ActionEvent e) {
                 int choose = JOptionPane.showConfirmDialog(
                         new JPanel(),
-                        "Bạn có muốn đăng xuất không?",
+                        "Bạn có muốn thoát chương trình không?",
                         "Cảnh báo",
                         JOptionPane.YES_NO_OPTION
                 );
