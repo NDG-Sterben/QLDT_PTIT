@@ -1,5 +1,6 @@
 package com.ndg.GUI;
 
+import com.ndg.ConnectionMySQL.ConnectionSQL;
 import com.ndg.Controllers.HomePageController;
 import com.ndg.SubFunction.ImageProcessing;
 import com.ndg.entities.OtherNotification;
@@ -14,6 +15,7 @@ public class HomePage extends ParentPanel implements IApplication {
     private final JPanel banner;
     private final JPanel content;
     private final JPanel showInfoLogin;
+    private final JLabel numberStuLogin;
 
     public HomePage(@NotNull JPanel panel, int idLogin) {
         super(panel.getWidth(), panel.getHeight(), idLogin);
@@ -184,28 +186,28 @@ public class HomePage extends ParentPanel implements IApplication {
                 displayOtherNotify.getHeight() - 5 * 2
         );
 
-        OtherNotification notify1 = new OtherNotification(container, 0, 0, 8);
+        OtherNotification notify1 = new OtherNotification(container,1, 0, 0, 8);
         notify1.setTextHeader("Thông báo: kết quả giải quyết đơn hỗ trợ đăng ký học kỳ 1 năm học 2023-2024");
         notify1.setTimeNotify("24/07/2023");
-        OtherNotification notify2 = new OtherNotification(container, 0, 37, 8);
+        OtherNotification notify2 = new OtherNotification(container, 2, 0, 37, 8);
         notify2.setTextHeader("Thông báo: Lịch đăng ký học kỳ 1 năm học 2023-2024 tuần từ 17/7 đến 23/7/2023");
         notify2.setTimeNotify("14/07/2023");
-        OtherNotification notify3 = new OtherNotification(container, 0, 74, 8);
+        OtherNotification notify3 = new OtherNotification(container, 3, 0, 74, 8);
         notify3.setTextHeader("Thông báo: Lịch đăng ký học kỳ 1 năm học 2023-2024 tuần từ 10/7 đến 16/7/2023");
         notify3.setTimeNotify("06/07/2023");
-        OtherNotification notify4 = new OtherNotification(container, 0, 111, 8);
+        OtherNotification notify4 = new OtherNotification(container, 4, 0, 111, 8);
         notify4.setTextHeader("Thông báo: Lịch đăng ký học kỳ 1 năm học 2023-2024 tuần 03-09/07/2023");
         notify4.setTimeNotify("29/06/2023");
-        OtherNotification notify5 = new OtherNotification(container, 0, 147, 8);
+        OtherNotification notify5 = new OtherNotification(container, 5, 0, 147, 8);
         notify5.setTextHeader("Điều chỉnh lịch đăng ký thời khóa biểu Học kỳ 1 năm học 2023-2024");
         notify5.setTimeNotify("19/06/2023");
-        OtherNotification notify6 = new OtherNotification(container, 0, 186, 8);
+        OtherNotification notify6 = new OtherNotification(container, 6, 0, 186, 8);
         notify6.setTextHeader("Thông báo về việc đăng ký học phần tốt nghiệp cho sinh viên ngành kỹ thuật 2019");
         notify6.setTimeNotify("30/05/2023");
-        OtherNotification notify7 = new OtherNotification(container, 0, 222, 8);
+        OtherNotification notify7 = new OtherNotification(container, 7, 0, 222, 8);
         notify7.setTextHeader("Thông báo đăng ký lịch học kỳ hè năm học 2022-2023");
         notify7.setTimeNotify("23/05/2023");
-        OtherNotification notify8 = new OtherNotification(container, 0, 259, 8);
+        OtherNotification notify8 = new OtherNotification(container, 8, 0, 259, 8);
         notify8.setTextHeader("Thông báo: V/v Đăng ký học phần tốt nghiệp cho sinh viên ngành truyền thông ĐPT và các ngành khối kinh tế khoá 2019");
         notify8.setTimeNotify("30/03/2023");
 
@@ -251,13 +253,13 @@ public class HomePage extends ParentPanel implements IApplication {
                 contentIntro.getHeight() - 5 * 2);
 
 
-        OtherNotification intro1 = new OtherNotification(introContent, 0, 0, 3);
+        OtherNotification intro1 = new OtherNotification(introContent, 9, 0, 0, 3);
         intro1.setTextHeader("Hướng dẫn sử dụng cổng thông tin điện tử quản lý đào tạo");
         intro1.setTimeNotify("21/06/2023");
-        OtherNotification intro2 = new OtherNotification(introContent, 0, 35, 3);
+        OtherNotification intro2 = new OtherNotification(introContent, 10,0, 35, 3);
         intro2.setTextHeader("Hướng dẫn sử dụng cổng thông tin điện tử quản lý đào tạo cho giảng viên và cố vấn học tập");
         intro2.setTimeNotify("01/08/2023");
-        OtherNotification intro3 = new OtherNotification(introContent, 0, 70, 3);
+        OtherNotification intro3 = new OtherNotification(introContent, 11,0, 70, 3);
         intro3.setTextHeader("Hướng dẫn sử dụng cổng thông tin điện tử quản lý đào tạo cho sinh viên");
         intro3.setTimeNotify("01/07/2023");
 
@@ -325,7 +327,7 @@ public class HomePage extends ParentPanel implements IApplication {
         JLabel iconStu = new JLabel(ImageProcessing.scaleImage("./assets/student.png", 20, 20));
         JLabel textStuLogin = new JLabel("SV truy cập");
         textStuLogin.setSize(new Dimension(default_width_component - 50, default_height_component));
-        JLabel numberStuLogin = new JLabel("1");
+        numberStuLogin = new JLabel(ConnectionSQL.countStuLogin());
 
 
         JPanel showTeacherLogin = new JPanel(new FlowLayout());
@@ -372,5 +374,10 @@ public class HomePage extends ParentPanel implements IApplication {
         panel.add(banner);
         panel.add(content);
         panel.add(showInfoLogin);
+    }
+
+
+    public JLabel getNumberStuLogin() {
+        return numberStuLogin;
     }
 }

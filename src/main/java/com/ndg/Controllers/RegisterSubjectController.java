@@ -9,9 +9,9 @@ import java.util.*;
 
 
 public class RegisterSubjectController implements ActionListener {
-    public HashMap<String, Boolean> checkScheduleDuplicate = new HashMap<>();
 
     public RegisterSubjectController(@NotNull RegisterSubject registerSubject) {
+        ArrayList<String> schedule = new ArrayList<>();
 
         // list data in JList
         Vector<String> listSubjectRegister = ConnectionSQL.showTextSubjectRegister(registerSubject.getIdLogin());
@@ -22,7 +22,25 @@ public class RegisterSubjectController implements ActionListener {
         Vector<Object[]> getDataTableClass = ConnectionSQL.getDataTableClass(registerSubject.getIdLogin());
         for (int i = 0; i < getDataTableClass.size(); i++) {
             registerSubject.getTableColumnClass().addRow(getDataTableClass.elementAt(i));
+            if (String.valueOf(getDataTableClass.elementAt(i)[0]).equals("true")) {
+                String thu = String.valueOf(getDataTableClass.elementAt(i)[9]);
+                String tietBD = String.valueOf(getDataTableClass.elementAt(i)[8]);
+
+                String schedule1 = "%s%s".formatted(thu.charAt(0), tietBD.charAt(0));
+                String schedule2 = "%s%s".formatted(thu.charAt(2), tietBD.charAt(2));
+
+                if (!schedule1.startsWith("00")) schedule.add(schedule1);
+                if (!schedule2.startsWith("00")) schedule.add(schedule2);
+
+            }
         }
+
+        System.out.println("===========================================");
+        for (String s : schedule) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+        System.out.println("===========================================");
 
 
         // list class register
@@ -41,7 +59,7 @@ public class RegisterSubjectController implements ActionListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (registerSubject.getInputSearch().trim().equals("")) {
+                if (registerSubject.getInputSearch().trim().isEmpty()) {
                     JOptionPane.showMessageDialog(
                             new JPanel(),
                             "Không được để trống",
@@ -110,7 +128,27 @@ public class RegisterSubjectController implements ActionListener {
                                     JOptionPane.WARNING_MESSAGE
                             );
                             registerSubject.getTblShowClass().setValueAt(false, rowSelected, 0);
+
                         } else {
+                            String thu = String.valueOf(registerSubject.getTblShowClass().getValueAt(rowSelected, 9));
+                            String tietBD = String.valueOf(registerSubject.getTblShowClass().getValueAt(rowSelected, 8));
+
+                            String schedule1 = "%s%s".formatted(thu.charAt(0), tietBD.charAt(0));
+                            String schedule2 = "%s%s".formatted(thu.charAt(2), tietBD.charAt(2));
+
+
+                            schedule.remove(schedule1);
+                            schedule.remove(schedule2);
+
+
+                            System.out.println("===========================================");
+                            for (String s : schedule) {
+                                System.out.print(s + " ");
+                            }
+                            System.out.println();
+                            System.out.println("===========================================");
+
+
                             System.out.println("Remove Subject Successful");
                             registerSubject.getTableColumnSub().removeRow(rowSubRegister);
                             int getTotalRow = registerSubject.getTableShowSub().getRowCount();
@@ -136,7 +174,30 @@ public class RegisterSubjectController implements ActionListener {
                     } else {
                         if (String.valueOf(registerSubject.getTblShowClass().getValueAt(rowSelected, 0)).equals("true")) {
                             // check duplicate subject register
+                            String thu = String.valueOf(registerSubject.getTblShowClass().getValueAt(rowSelected, 9));
+                            String tietBD = String.valueOf(registerSubject.getTblShowClass().getValueAt(rowSelected, 8));
 
+                            String schedule1 = "%s%s".formatted(thu.charAt(0), tietBD.charAt(0));
+                            String schedule2 = "%s%s".formatted(thu.charAt(2), tietBD.charAt(2));
+
+                            if (schedule.contains(schedule1) || schedule.contains(schedule2)) {
+                                JOptionPane.showMessageDialog(
+                                        new JPanel(),
+                                        "Môn học đăng kí đã bị trùng lịch với một môn khác",
+                                        "Error",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+                                registerSubject.getTblShowClass().setValueAt(false, rowSelected, 0);
+
+                                System.out.println("===========================================");
+                                for (String s : schedule) {
+                                    System.out.print(s + " ");
+                                }
+                                System.out.println();
+                                System.out.println("===========================================");
+
+                                return;
+                            }
 
                             registerSubject.getTableColumnSub().addRow(new Object[]{
                                     registerSubject.getTableColumnSub().getRowCount() + 1,
@@ -149,6 +210,17 @@ public class RegisterSubjectController implements ActionListener {
                                     registerSubject.getTblShowClass().getValueAt(rowSelected, 6).toString().toLowerCase()
                             );
                             System.out.println("Register subject successful");
+
+                            if (!schedule1.equals("00")) schedule.add(schedule1);
+                            if (!schedule2.equals("00")) schedule.add(schedule2);
+
+                            System.out.println("===========================================");
+                            for (String s : schedule) {
+                                System.out.print(s + " ");
+                            }
+                            System.out.println();
+                            System.out.println("===========================================");
+
                             ConnectionSQL.updateNumberOfStuInClass(
                                     String.valueOf(registerSubject.getTblShowClass().getValueAt(rowSelected, 6)).toLowerCase(),
                                     false

@@ -72,7 +72,7 @@ public class MainProgramController {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 mainProgram.getMainPanel().removeAll();
-                new ShowSchedule(mainProgram.getMainPanel()).show(mainProgram.getMainPanel());
+                new ShowSchedule(mainProgram.getMainPanel(), mainProgram.getIdLogin()).show(mainProgram.getMainPanel());
                 mainProgram.getMainPanel().revalidate();
                 mainProgram.getMainPanel().repaint();
             }

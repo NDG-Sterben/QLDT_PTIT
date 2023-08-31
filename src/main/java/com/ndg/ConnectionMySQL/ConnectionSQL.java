@@ -1,8 +1,10 @@
 package com.ndg.ConnectionMySQL;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -11,6 +13,8 @@ public class ConnectionSQL {
     private static final String user = "root";
     private static final String pass = "@Sterben2810";
     public static Connection connection;
+    private static Statement statement;
+
 
     public static void getConnection() {
         try {
@@ -34,7 +38,7 @@ public class ConnectionSQL {
         String query = "SELECT * FROM accounts " +
                         "WHERE username = '" + username + "'" + " AND " + "password = '" + password + "'";
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 if (username.equals(resultSet.getString("username")) &&
@@ -54,6 +58,46 @@ public class ConnectionSQL {
     }
 
 
+    public synchronized static String countStuLogin() {
+        String result = "";
+        String query = """
+                select count(isLogin) as totalStuLogin
+                from accounts
+                where isLogin = 1""";
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                result = resultSet.getString("totalStuLogin");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+
+    public synchronized static void checkStatus(int idLogin, boolean status) {
+        String checkLogin = """
+                update accounts
+                set isLogin = 1
+                where idAcc =""" + idLogin;
+
+        String checkLogout = """
+                update accounts
+                set isLogin = 0
+                where idAcc =""" + idLogin;
+
+        try {
+            statement = connection.createStatement();
+            if (status) statement.executeUpdate(checkLogin);
+            else statement.executeUpdate(checkLogout);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public synchronized static @NotNull HashMap<String, String> getInformationLogin(int idLogin) {
         HashMap<String, String> getInfo = new HashMap<>();
@@ -65,7 +109,7 @@ public class ConnectionSQL {
                 WHERE idAcc = '""" + idLogin + "'";
 
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
@@ -93,7 +137,7 @@ public class ConnectionSQL {
                 WHERE idAcc = '""" + idLogin + "'";
         String result = "";
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 result = resultSet.getString("TenNganh");
@@ -111,21 +155,19 @@ public class ConnectionSQL {
         String query = """
                 SELECT subjects.subjectCode, subjects.subjectName, subjects.STC, lophp.NMH, lophp.TTH,
                                 lophp.classCode, lophp.soluong, lophp.TietBD, lophp.Thu, teachers.teacherName
-                FROM student_manager.lophp
-                INNER JOIN student_manager.subjects ON student_manager.lophp.subjectCode = student_manager.subjects.subjectCode
-                INNER JOIN student_manager.teachers ON student_manager.teachers.teacherCode = lophp.teacherCode
+                FROM lophp
+                INNER JOIN subjects ON lophp.subjectCode = subjects.subjectCode
+                INNER JOIN teachers ON teachers.teacherCode = lophp.teacherCode
                 WHERE subjects.MaNganh LIKE (SELECT MaNganh FROM students WHERE idAcc = %d)
-                ORDER BY subjectName ASC
-                """.formatted(idLogin);
-
+                        OR (subjects.MaNganh is null and subjects.MaKhoa is null)
+                ORDER BY subjectName ASC;""".formatted(idLogin);
 
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             HashMap<String, Boolean> checkSubjectRegis = ConnectionSQL.getSub(idLogin);
             while (resultSet.next()) {
-                boolean subRegis;
-                subRegis = checkSubjectRegis.get(resultSet.getString("classCode")) != null;
+                boolean subRegis = checkSubjectRegis.get(resultSet.getString("classCode")) != null;
 
                 Object[] e = {
                         subRegis,
@@ -204,7 +246,6 @@ public class ConnectionSQL {
                 INNER JOIN subjects ON subjects.subjectCode = lophp.subjectCode
                 WHERE subjects.MaNganh LIKE (SELECT MaNganh FROM students WHERE idAcc = '""" + idLogin + "')";
 
-        Statement statement;
         try {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -245,7 +286,7 @@ public class ConnectionSQL {
                 where idAcc = '""" + idLogin + "'";
 
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 Vector<String> vector = new Vector<>(2);
@@ -268,7 +309,7 @@ public class ConnectionSQL {
                 where idAcc = '""" + idLogin + "'";
 
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 result.put(resultSet.getString("classCode"), true);
@@ -325,7 +366,7 @@ public class ConnectionSQL {
 
 
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             int i = 0;
             while (resultSet.next()) {
@@ -343,9 +384,62 @@ public class ConnectionSQL {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
         return getSubject;
     }
 
+
+
+    public static @NotNull HashMap<String, String> getSchedule(int idLogin) {
+        HashMap<String, String> getCalender = new HashMap<>();
+        String query = """
+                select subjectName, thu, tietBD from lophp
+                inner join lophp_regis on lophp_regis.classCode = lophp.classCode
+                inner join subjects on subjects.subjectCode = lophp.subjectCode
+                where lophp_regis.idAcc = %d""".formatted(idLogin);
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                char[] thu = resultSet.getString("thu").toCharArray();
+                char[] tietBD = resultSet.getString("tietBD").toCharArray();
+                System.out.println(thu.length + " " + tietBD.length);
+                String calender = "%s%s_%s%s".formatted(thu[0], tietBD[0], thu[2], tietBD[2]);
+            }
+         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return getCalender;
+    }
+
+
+    @Contract(pure = true)
+    public static @NotNull ArrayList<Object[]> scheduleClasses(int idLogin) {
+        ArrayList<Object[]> getSchedule = new ArrayList<>();
+        String query = """
+                select subjects.subjectName, teachers.teacherName, lophp.thu, lophp.tietBD
+                from lophp_regis
+                inner join lophp on lophp.classCode = lophp_regis.classCode
+                inner join subjects on subjects.subjectCode = lophp.subjectCode
+                inner join teachers on teachers.teacherCode = lophp.teacherCode
+                where idAcc = %d""".formatted(idLogin);
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                Object[] e = {
+                        resultSet.getString("subjectName"),
+                        resultSet.getString("teacherName"),
+                        resultSet.getString("thu"),
+                        resultSet.getString("tietBD")
+                };
+                getSchedule.add(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return  getSchedule;
+    }
 }

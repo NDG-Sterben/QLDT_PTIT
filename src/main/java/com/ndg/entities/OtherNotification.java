@@ -4,16 +4,22 @@ import com.ndg.SubFunction.ImageProcessing;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class OtherNotification extends JPanel {
     private final JLabel headerNotify;
     private final JLabel timeNotify;
+    private final int idNotification;
 
-    public OtherNotification(@NotNull JPanel panel, int x, int y, int number) {
+    public OtherNotification(@NotNull JPanel panel, int idNotification, int x, int y, int number) {
         super();
         this.setLayout(null);
         this.setBounds(x, y, panel.getWidth(), panel.getHeight() / number);
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
         String pathIcon = "./assets/next.png";
+        this.idNotification = idNotification;
         int widthIcon = ImageProcessing.getWidthImage(pathIcon);
         int height = ImageProcessing.getHeightImage(pathIcon);
         float scale = 0.1F;
@@ -42,6 +48,8 @@ public class OtherNotification extends JPanel {
         this.add(headerNotify);
         this.add(timeNotify);
         panel.add(this);
+
+        addEvents();
     }
 
     public void setTextHeader(String header) {
@@ -50,5 +58,15 @@ public class OtherNotification extends JPanel {
 
     public void setTimeNotify(String time) {
         this.timeNotify.setText(time);
+    }
+
+    private void addEvents() {
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.println(idNotification);
+            }
+        });
     }
 }

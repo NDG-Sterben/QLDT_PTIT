@@ -67,6 +67,7 @@ public class Application extends JFrame implements IApplication {
         logout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println();
                 int choose = JOptionPane.showConfirmDialog(
                         new JPanel(),
                         "Bạn có muốn đăng xuất không?",

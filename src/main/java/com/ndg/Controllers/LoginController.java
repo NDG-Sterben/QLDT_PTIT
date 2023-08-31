@@ -55,6 +55,7 @@ public class LoginController {
                     System.out.println("Login control: " + mainProgram.getIdLogin());
                     loginUI.revalidate();
                     loginUI.repaint();
+                    ConnectionSQL.checkStatus(loginUI.getIdLogin(), true);
                 }
                 else {
                     JOptionPane.showMessageDialog(
