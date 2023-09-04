@@ -79,7 +79,7 @@ public class LoginController {
                 } catch (IOException | URISyntaxException ex) {
                     JOptionPane.showMessageDialog(
                             new JPanel(),
-                            "Cannot to reach page",
+                            "Cannot reach page",
                             "Error",
                             JOptionPane.ERROR_MESSAGE
                     );

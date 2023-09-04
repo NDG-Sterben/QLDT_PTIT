@@ -67,6 +67,20 @@ public class OtherNotification extends JPanel {
                 super.mouseClicked(e);
                 System.out.println(idNotification);
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                headerNotify.setForeground(Color.red);
+                timeNotify.setForeground(Color.red);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                headerNotify.setForeground(Color.black);
+                timeNotify.setForeground(Color.black);
+            }
         });
     }
 }

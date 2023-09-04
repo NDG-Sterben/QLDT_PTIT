@@ -1,9 +1,10 @@
 package com.ndg.GUI;
 
+import com.ndg.ConnectionMySQL.ConnectionSQL;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,9 +14,11 @@ public class Application extends JFrame implements IApplication {
     private final JMenuItem exit;
     private final JMenuItem info;
     private final JMenuItem update;
+    private final JMenuItem feedback;
+    private  final LoginUI loginUI;
 
     public Application() {
-        LoginUI loginUI = new LoginUI(-1);
+        loginUI = new LoginUI(-1);
 
         this.setTitle(appName);
         this.setSize(width, height);
@@ -24,7 +27,7 @@ public class Application extends JFrame implements IApplication {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
@@ -37,6 +40,7 @@ public class Application extends JFrame implements IApplication {
         exit = new JMenuItem("Thoát");
 
         JMenu help = new JMenu("Help");
+        feedback = new JMenuItem("Phản hồi");
         info = new JMenuItem("Thông tin");
         update = new JMenuItem("Cập nhật");
 
@@ -45,6 +49,7 @@ public class Application extends JFrame implements IApplication {
         menu.add(exit);
 
         help.add(info);
+        help.add(feedback);
         help.add(update);
 
         menuBar.add(menu);
@@ -56,79 +61,112 @@ public class Application extends JFrame implements IApplication {
     }
 
     private void addEvents() {
-        reload.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Reloading ...");
+        reload.addActionListener(e -> System.out.println("Reloading ..."));
+
+
+
+        logout.addActionListener(e -> {
+            System.out.println();
+            int choose = JOptionPane.showConfirmDialog(
+                    new JPanel(),
+                    "Bạn có muốn đăng xuất không?",
+                    "Information",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE
+            );
+
+            if (choose == JOptionPane.YES_OPTION) {
+                getContentPane().removeAll();
+                getContentPane().add(new LoginUI(-1));
+                getContentPane().revalidate();
+                getContentPane().repaint();
+                ConnectionSQL.checkStatus(loginUI.getIdLogin(), false);
             }
         });
 
 
-        logout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println();
-                int choose = JOptionPane.showConfirmDialog(
-                        new JPanel(),
-                        "Bạn có muốn đăng xuất không?",
-                        "Thông báo",
-                        JOptionPane.OK_CANCEL_OPTION
-                );
 
-                if (choose == JOptionPane.YES_OPTION) {
-                    getContentPane().removeAll();
-                    getContentPane().add(new LoginUI(-1));
-                    getContentPane().revalidate();
-                    getContentPane().repaint();
-                }
+
+        exit.addActionListener(e -> {
+            int choose = JOptionPane.showConfirmDialog(
+                    new JPanel(),
+                    "Bạn có muốn thoát chương trình không?",
+                    "Warning",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE
+            );
+
+            if (choose == JOptionPane.YES_OPTION) {
+                ConnectionSQL.checkStatus(loginUI.getIdLogin(), false);
+                System.exit(1);
             }
         });
 
 
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int choose = JOptionPane.showConfirmDialog(
-                        new JPanel(),
-                        "Bạn có muốn thoát chương trình không?",
-                        "Cảnh báo",
-                        JOptionPane.YES_NO_OPTION
-                );
-
-                if (choose == JOptionPane.YES_OPTION) {
-                    System.exit(1);
-                }
-            }
-        });
-
-        info.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(
-                        new JPanel(),
-                        """
-                                Chào mừng bạn đến với phần mềm PTIT demo.
-                                Vui lòng liên hệ admin để biết thêm thông tin chi tiết.
-                                Github: https://github.com/NDG-Sterben
-                                Beta Version: 1.0.0
-                                """,
-                        "Thông tin",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-            }
-        });
 
 
-        update.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        info.addActionListener(e -> JOptionPane.showMessageDialog(
+                new JPanel(),
+                """
+                        Chào mừng bạn đến với phần mềm PTIT demo.
+                        Vui lòng liên hệ admin để biết thêm thông tin chi tiết.
+                        Github: https://github.com/NDG-Sterben
+                        Beta Version: 1.0.0
+                        """,
+                "Information",
+                JOptionPane.INFORMATION_MESSAGE
+        ));
+
+
+
+        feedback.addActionListener( e -> {
+            if (loginUI.getIdLogin() == -1) {
                 JOptionPane.showMessageDialog(
                         new JOptionPane(),
-                        "Chức năng đang được cập nhật",
-                        "Thông tin",
+                        "Bạn cần đăng nhập trước khi để lại phản hồi",
+                        "Information",
                         JOptionPane.INFORMATION_MESSAGE
                 );
+            } else {
+                new FeedBack(this).init();
             }
         });
+
+
+
+        update.addActionListener(e -> JOptionPane.showMessageDialog(
+                new JOptionPane(),
+                "Chức năng đang được cập nhật",
+                "Information",
+                JOptionPane.INFORMATION_MESSAGE
+        ));
+
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int choice = JOptionPane.showConfirmDialog(
+                        new JPanel(),
+                        "Bạn có muốn thoát không?",
+                        "Warning",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE
+                );
+                if (choice == JOptionPane.YES_OPTION) {
+                    System.out.println("Exit Program Successful");
+                    if (ConnectionSQL.connection != null) {
+                        ConnectionSQL.checkStatus(loginUI.getIdLogin(), false);
+                    }
+                    System.exit(0);
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void setDefaultCloseOperation(int operation) {
+        if (ConnectionSQL.connection != null) {
+            ConnectionSQL.checkStatus(loginUI.getIdLogin(), false);
+        }
+        System.out.println("Exit Program Successful");
+        super.setDefaultCloseOperation(operation);
     }
 }

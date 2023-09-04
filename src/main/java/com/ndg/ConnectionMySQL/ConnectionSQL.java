@@ -3,7 +3,12 @@ package com.ndg.ConnectionMySQL;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.*;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -81,12 +86,12 @@ public class ConnectionSQL {
     public synchronized static void checkStatus(int idLogin, boolean status) {
         String checkLogin = """
                 update accounts
-                set isLogin = 1
+                set isLogin = 1, lastLogin = now()
                 where idAcc =""" + idLogin;
 
         String checkLogout = """
                 update accounts
-                set isLogin = 0
+                set isLogin = 0, lastLogout = now()
                 where idAcc =""" + idLogin;
 
         try {
@@ -336,7 +341,7 @@ public class ConnectionSQL {
 
 
     public synchronized static void insertSubRegis(int idLogin, String classCode) {
-        String query = "INSERT INTO lophp_regis (classCode,  idAcc) VALUES ('" + classCode + "', " + idLogin + ")";
+        String query = "INSERT INTO lophp_regis (classCode,  idAcc, timeRegis) VALUES ('%s', %d, now())".formatted(classCode, idLogin);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.executeUpdate();
@@ -418,10 +423,10 @@ public class ConnectionSQL {
     public static @NotNull ArrayList<Object[]> scheduleClasses(int idLogin) {
         ArrayList<Object[]> getSchedule = new ArrayList<>();
         String query = """
-                select subjects.subjectName, teachers.teacherName, lophp.thu, lophp.tietBD
+                select subjects.subjectCode, subjects.subjectName, lophp.NMH, lophp.phong, teachers.teacherName, lophp.classCode, lophp.thu, lophp.tietBD
                 from lophp_regis
-                inner join lophp on lophp.classCode = lophp_regis.classCode
-                inner join subjects on subjects.subjectCode = lophp.subjectCode
+                left join lophp on lophp.classCode = lophp_regis.classCode
+                left join subjects on subjects.subjectCode = lophp.subjectCode
                 inner join teachers on teachers.teacherCode = lophp.teacherCode
                 where idAcc = %d""".formatted(idLogin);
 
@@ -430,8 +435,12 @@ public class ConnectionSQL {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 Object[] e = {
+                        resultSet.getString("subjectCode").toUpperCase(),
                         resultSet.getString("subjectName"),
+                        resultSet.getString("NMH"),
+                        resultSet.getString("phong"),
                         resultSet.getString("teacherName"),
+                        resultSet.getString("classCode").toUpperCase(),
                         resultSet.getString("thu"),
                         resultSet.getString("tietBD")
                 };
@@ -441,5 +450,68 @@ public class ConnectionSQL {
             throw new RuntimeException(e);
         }
         return  getSchedule;
+    }
+
+
+
+    public static @NotNull Vector<String> getYearNH(int idLogin) {
+        Vector<String> getData = new Vector<>();
+        String formatSchedule = "Kì %d Năm học %d - %d";
+        int namNH = 0;
+        float namDT = 0;
+        String query = """
+                select namNH, khoa.NamDT from students
+                inner join nganh on nganh.MaNganh = students.MaNganh
+                inner join khoa on khoa.MaKhoa = nganh.MaKhoa
+                where idAcc = %d""".formatted(idLogin);
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                namNH = Integer.parseInt(resultSet.getString("namNH"));
+                namDT = Float.parseFloat(resultSet.getString("NamDT"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        int m = (int) (namDT * 2);
+        byte k = 0;
+        for (int i = 1; i <= m; i++) {
+            getData.add(formatSchedule.formatted(k + 1, namNH, namNH + 1));
+            k += 1;
+            if (k == 2) {
+                k = 0;
+                namNH++;
+            }
+        }
+        return  getData;
+    }
+
+
+    public static @NotNull Vector<String> getDataHK(int idLogin) {
+        Vector<String> getData = new Vector<>();
+        String format = "Học kì %d";
+        float namDT = 0;
+        String query = """
+                select namDT from khoa
+                inner join nganh on nganh.MaKhoa = khoa.MaKhoa
+                where MaNganh like (select MaNganh from students where idAcc = %d)""".formatted(idLogin);
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                namDT = Float.parseFloat(resultSet.getString("namDT"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        for (int i = 1; i <= namDT * 2; i++) {
+            getData.add(format.formatted(i));
+        }
+        return getData;
     }
 }

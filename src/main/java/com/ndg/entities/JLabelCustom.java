@@ -1,18 +1,20 @@
 package com.ndg.entities;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
 
 public class JLabelCustom extends JLabel {
     private Object[] objects;
     private final ShowMoreInformation showMoreInformation;
 
-    public JLabelCustom(ShowMoreInformation showMoreInformation) {
+    public JLabelCustom(int x, int y, int width, int height, ShowMoreInformation showMoreInformation) {
         super();
+        this.setBounds(x, y, width, height);
+        this.setHorizontalAlignment(SwingConstants.CENTER);
+        this.setVerticalAlignment(SwingConstants.CENTER);
+        this.setBorder(BorderFactory.createLineBorder(Color.red));
         this.showMoreInformation = showMoreInformation;
         addEvents();
     }

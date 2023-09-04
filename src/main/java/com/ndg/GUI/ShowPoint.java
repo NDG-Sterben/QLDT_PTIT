@@ -156,18 +156,7 @@ public class ShowPoint extends ParentPanel {
                 default_height_component
         );
 
-        String[] nameHK = {
-                "Học kì 1",
-                "Học kì 2",
-                "Học kì 3",
-                "Học kì 4",
-                "Học kì 5",
-                "Học kì 6",
-                "Học kì 7",
-                "Học kì 8",
-        };
-
-        listHK = new JComboBox<>(nameHK);
+        listHK = new JComboBox<>();
         listHK.setBounds(
                 panelShowInfo.getX() + panelShowInfo.getWidth() + 200,
                 panelShowInfo.getY(),
@@ -259,5 +248,9 @@ public class ShowPoint extends ParentPanel {
 
     public JLabel getLbShowKhoa() {
         return lbShowKhoa;
+    }
+
+    public JComboBox<String> getListHK() {
+        return listHK;
     }
 }

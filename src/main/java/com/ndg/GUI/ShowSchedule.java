@@ -10,9 +10,8 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class ShowSchedule extends ParentPanel {
-    private ShowMoreInformation showMoreInformation;
     private final JLabel lbSchedule;
-    private final JComboBox comboBoxSchoolYear;
+    private final JComboBox<String> comboBoxSchoolYear;
     private final JPanel panelShowSchedule;
     private final JLabelCustom lbT2K1, lbT2K2, lbT2K3, lbT2K4, lbT2K5, lbT2K6;
     private final JLabelCustom lbT3K1, lbT3K2, lbT3K3, lbT3K4, lbT3K5, lbT3K6;
@@ -23,7 +22,7 @@ public class ShowSchedule extends ParentPanel {
 
     public ShowSchedule(@NotNull JPanel panel, int idLogin) {
         super(panel.getWidth(), panel.getHeight(), idLogin);
-        showMoreInformation = new ShowMoreInformation(0, 0);
+        ShowMoreInformation showMoreInformation = new ShowMoreInformation(0, 0);
 
         final int maxColumn = 9;
         final int maxRow = 8;
@@ -292,401 +291,42 @@ public class ShowSchedule extends ParentPanel {
         lbSpace4.setBackground(Color.red);
         lbSpace4.setBorder(BorderFactory.createLineBorder(Color.red));
 
-        lbT2K1 = new JLabelCustom(showMoreInformation);
-        lbT2K1.setBounds(
-                lbMo.getX(),
-                lbKip1L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT2K1.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT2K1.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT2K1.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT2K2 = new JLabelCustom(showMoreInformation);
-        lbT2K2.setBounds(
-                lbMo.getX(),
-                lbKip2L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT2K2.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT2K2.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT2K2.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT2K3 = new JLabelCustom(showMoreInformation);
-        lbT2K3.setBounds(
-                lbMo.getX(),
-                lbKip3L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT2K3.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT2K3.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT2K3.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT2K4 = new JLabelCustom(showMoreInformation);
-        lbT2K4.setBounds(
-                lbMo.getX(),
-                lbKip4L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT2K4.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT2K4.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT2K4.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT2K5 = new JLabelCustom(showMoreInformation);
-        lbT2K5.setBounds(
-                lbMo.getX(),
-                lbKip5L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT2K5.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT2K5.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT2K5.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT2K6 = new JLabelCustom(showMoreInformation);
-        lbT2K6.setBounds(
-                lbMo.getX(),
-                lbKip6L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT2K6.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT2K6.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT2K6.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT3K1 = new JLabelCustom(showMoreInformation);
-        lbT3K1.setBounds(
-                lbTu.getX(),
-                lbKip1L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT3K1.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT3K1.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT3K1.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT3K2 = new JLabelCustom(showMoreInformation);
-        lbT3K2.setBounds(
-                lbTu.getX(),
-                lbKip2L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT3K2.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT3K2.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT3K2.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT3K3 = new JLabelCustom(showMoreInformation);
-        lbT3K3.setBounds(
-                lbTu.getX(),
-                lbKip3L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT3K3.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT3K3.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT3K3.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT3K4 = new JLabelCustom(showMoreInformation);
-        lbT3K4.setBounds(
-                lbTu.getX(),
-                lbKip4L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT3K4.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT3K4.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT3K4.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT3K5 = new JLabelCustom(showMoreInformation);
-        lbT3K5.setBounds(
-                lbTu.getX(),
-                lbKip5L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT3K5.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT3K5.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT3K5.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT3K6 = new JLabelCustom(showMoreInformation);
-        lbT3K6.setBounds(
-                lbTu.getX(),
-                lbKip6L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT3K6.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT3K6.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT3K6.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT4K1 = new JLabelCustom(showMoreInformation);
-        lbT4K1.setBounds(
-                lbWe.getX(),
-                lbKip1L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT4K1.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT4K1.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT4K1.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT4K2 = new JLabelCustom(showMoreInformation);
-        lbT4K2.setBounds(
-                lbWe.getX(),
-                lbKip2L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT4K2.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT4K2.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT4K2.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT4K3 = new JLabelCustom(showMoreInformation);
-        lbT4K3.setBounds(
-                lbWe.getX(),
-                lbKip3L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT4K3.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT4K3.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT4K3.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT4K4 = new JLabelCustom(showMoreInformation);
-        lbT4K4.setBounds(
-                lbWe.getX(),
-                lbKip4L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT4K4.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT4K4.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT4K4.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT4K5 = new JLabelCustom(showMoreInformation);
-        lbT4K5.setBounds(
-                lbWe.getX(),
-                lbKip5L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT4K5.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT4K5.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT4K5.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT4K6 = new JLabelCustom(showMoreInformation);
-        lbT4K6.setBounds(
-                lbWe.getX(),
-                lbKip6L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT4K6.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT4K6.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT4K6.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT5K1 = new JLabelCustom(showMoreInformation);
-        lbT5K1.setBounds(
-                lbTh.getX(),
-                lbKip1L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT5K1.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT5K1.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT5K1.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT5K2 = new JLabelCustom(showMoreInformation);
-        lbT5K2.setBounds(
-                lbTh.getX(),
-                lbKip2L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT5K2.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT5K2.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT5K2.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT5K3 = new JLabelCustom(showMoreInformation);
-        lbT5K3.setBounds(
-                lbTh.getX(),
-                lbKip3L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT5K3.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT5K3.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT5K3.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT5K4 = new JLabelCustom(showMoreInformation);
-        lbT5K4.setBounds(
-                lbTh.getX(),
-                lbKip4L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT5K4.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT5K4.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT5K4.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT5K5 = new JLabelCustom(showMoreInformation);
-        lbT5K5.setBounds(
-                lbTh.getX(),
-                lbKip5L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT5K5.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT5K5.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT5K5.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT5K6 = new JLabelCustom(showMoreInformation);
-        lbT5K6.setBounds(
-                lbTh.getX(),
-                lbKip6L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT5K6.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT5K6.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT5K6.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT6K1 = new JLabelCustom(showMoreInformation);
-        lbT6K1.setBounds(
-                lbFr.getX(),
-                lbKip1L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT6K1.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT6K1.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT6K1.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT6K2 = new JLabelCustom(showMoreInformation);
-        lbT6K2.setBounds(
-                lbFr.getX(),
-                lbKip2L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT6K2.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT6K2.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT6K2.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT6K3 = new JLabelCustom(showMoreInformation);
-        lbT6K3.setBounds(
-                lbFr.getX(),
-                lbKip3L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT6K3.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT6K3.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT6K3.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT6K4 = new JLabelCustom(showMoreInformation);
-        lbT6K4.setBounds(
-                lbFr.getX(),
-                lbKip4L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT6K4.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT6K4.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT6K4.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT6K5 = new JLabelCustom(showMoreInformation);
-        lbT6K5.setBounds(
-                lbFr.getX(),
-                lbKip5L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT6K5.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT6K5.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT6K5.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT6K6 = new JLabelCustom(showMoreInformation);
-        lbT6K6.setBounds(
-                lbFr.getX(),
-                lbKip6L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT6K6.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT6K6.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT6K6.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT7K1 = new JLabelCustom(showMoreInformation);
-        lbT7K1.setBounds(
-                lbSt.getX(),
-                lbKip1L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT7K1.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT7K1.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT7K1.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT7K2 = new JLabelCustom(showMoreInformation);
-        lbT7K2.setBounds(
-                lbSt.getX(),
-                lbKip2L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT7K2.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT7K2.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT7K2.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT7K3 = new JLabelCustom(showMoreInformation);
-        lbT7K3.setBounds(
-                lbSt.getX(),
-                lbKip3L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT7K3.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT7K3.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT7K3.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT7K4 = new JLabelCustom(showMoreInformation);
-        lbT7K4.setBounds(
-                lbSt.getX(),
-                lbKip4L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT7K4.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT7K4.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT7K4.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT7K5 = new JLabelCustom(showMoreInformation);
-        lbT7K5.setBounds(
-                lbSt.getX(),
-                lbKip5L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT7K5.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT7K5.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT7K5.setVerticalAlignment(SwingConstants.CENTER);
-
-        lbT7K6 = new JLabelCustom(showMoreInformation);
-        lbT7K6.setBounds(
-                lbSt.getX(),
-                lbKip6L.getY(),
-                maxWidthLabel,
-                maxHeightLabel
-        );
-        lbT7K6.setBorder(BorderFactory.createLineBorder(Color.red));
-        lbT7K6.setHorizontalAlignment(SwingConstants.CENTER);
-        lbT7K6.setVerticalAlignment(SwingConstants.CENTER);
+        lbT2K1 = new JLabelCustom(lbMo.getX(), lbKip1L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT2K2 = new JLabelCustom(lbMo.getX(), lbKip2L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT2K3 = new JLabelCustom(lbMo.getX(), lbKip3L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT2K4 = new JLabelCustom(lbMo.getX(), lbKip4L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT2K5 = new JLabelCustom(lbMo.getX(), lbKip5L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT2K6 = new JLabelCustom(lbMo.getX(), lbKip6L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT3K1 = new JLabelCustom(lbTu.getX(), lbKip1L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT3K2 = new JLabelCustom(lbTu.getX(), lbKip2L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT3K3 = new JLabelCustom(lbTu.getX(), lbKip3L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT3K4 = new JLabelCustom(lbTu.getX(), lbKip4L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT3K5 = new JLabelCustom(lbTu.getX(), lbKip5L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT3K6 = new JLabelCustom(lbTu.getX(), lbKip6L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT4K1 = new JLabelCustom(lbWe.getX(), lbKip1L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT4K2 = new JLabelCustom(lbWe.getX(), lbKip2L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT4K3 = new JLabelCustom(lbWe.getX(), lbKip3L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT4K4 = new JLabelCustom(lbWe.getX(), lbKip4L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT4K5 = new JLabelCustom(lbWe.getX(), lbKip5L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT4K6 = new JLabelCustom(lbWe.getX(), lbKip6L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT5K1 = new JLabelCustom(lbTh.getX(), lbKip1L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT5K2 = new JLabelCustom(lbTh.getX(), lbKip2L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT5K3 = new JLabelCustom(lbTh.getX(), lbKip3L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT5K4 = new JLabelCustom(lbTh.getX(), lbKip4L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT5K5 = new JLabelCustom(lbTh.getX(), lbKip5L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT5K6 = new JLabelCustom(lbTh.getX(), lbKip6L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT6K1 = new JLabelCustom(lbFr.getX(), lbKip1L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT6K2 = new JLabelCustom(lbFr.getX(), lbKip2L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT6K3 = new JLabelCustom(lbFr.getX(), lbKip3L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT6K4 = new JLabelCustom(lbFr.getX(), lbKip4L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT6K5 = new JLabelCustom(lbFr.getX(), lbKip5L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT6K6 = new JLabelCustom(lbFr.getX(), lbKip6L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT7K1 = new JLabelCustom(lbSt.getX(), lbKip1L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT7K2 = new JLabelCustom(lbSt.getX(), lbKip2L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT7K3 = new JLabelCustom(lbSt.getX(), lbKip3L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT7K4 = new JLabelCustom(lbSt.getX(), lbKip4L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT7K5 = new JLabelCustom(lbSt.getX(), lbKip5L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
+        lbT7K6 = new JLabelCustom(lbSt.getX(), lbKip6L.getY(), maxWidthLabel, maxHeightLabel, showMoreInformation);
 
         JLabel lbCNK1 = new JLabel();
         lbCNK1.setBounds(
@@ -865,6 +505,10 @@ public class ShowSchedule extends ParentPanel {
         panel.add(panelShowSchedule);
     }
 
+    public JComboBox<String> getComboBoxSchoolYear() {
+        return comboBoxSchoolYear;
+    }
+
     public HashMap<String, JLabelCustom> getAllComponents() {
         HashMap<String, JLabelCustom> getAllCom = new HashMap<>();
         getAllCom.put(lbT2K1.getName(), lbT2K1);
@@ -904,9 +548,5 @@ public class ShowSchedule extends ParentPanel {
         getAllCom.put(lbT7K5.getName(), lbT7K5);
         getAllCom.put(lbT7K6.getName(), lbT7K6);
         return getAllCom;
-    }
-
-    public JPanel getPanelShowSchedule() {
-        return panelShowSchedule;
     }
 }

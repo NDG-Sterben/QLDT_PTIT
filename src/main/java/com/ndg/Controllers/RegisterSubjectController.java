@@ -125,7 +125,7 @@ public class RegisterSubjectController implements ActionListener {
                                     new JPanel(),
                                     "Môn học đã được đăng kí",
                                     "Error",
-                                    JOptionPane.WARNING_MESSAGE
+                                    JOptionPane.ERROR_MESSAGE
                             );
                             registerSubject.getTblShowClass().setValueAt(false, rowSelected, 0);
 
@@ -199,16 +199,18 @@ public class RegisterSubjectController implements ActionListener {
                                 return;
                             }
 
+                            ConnectionSQL.insertSubRegis(
+                                    registerSubject.getIdLogin(),
+                                    registerSubject.getTblShowClass().getValueAt(rowSelected, 6).toString().toLowerCase()
+                            );
+
                             registerSubject.getTableColumnSub().addRow(new Object[]{
                                     registerSubject.getTableColumnSub().getRowCount() + 1,
                                     registerSubject.getTblShowClass().getValueAt(rowSelected, 2),
                                     registerSubject.getTblShowClass().getValueAt(rowSelected, 5),
                                     "Đã lưu"
                             });
-                            ConnectionSQL.insertSubRegis(
-                                    registerSubject.getIdLogin(),
-                                    registerSubject.getTblShowClass().getValueAt(rowSelected, 6).toString().toLowerCase()
-                            );
+
                             System.out.println("Register subject successful");
 
                             if (!schedule1.equals("00")) schedule.add(schedule1);
