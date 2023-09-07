@@ -1,6 +1,5 @@
 com\ndg\Controllers\RegisterSubjectController$1.class
 com\ndg\GUI\ShowScheduleReTest.class
-com\ndg\GUI\Application$5.class
 com\ndg\GUI\ShowTuition.class
 com\ndg\Controllers\ScheduleTestController.class
 com\ndg\GUI\ShowPoint.class
@@ -8,12 +7,14 @@ com\ndg\Controllers\MainProgramController$6.class
 com\ndg\SubFunction\ImageProcessing.class
 com\ndg\Controllers\ShowPointController.class
 com\ndg\entities\OtherNotification.class
+com\ndg\Controllers\FeedBackController.class
 com\ndg\GUI\RegisterSubject.class
 com\ndg\Controllers\RegisterSubjectController.class
 com\ndg\Server\Client.class
+com\ndg\SubFunction\DivideSubjectName.class
 com\ndg\Controllers\ShowTuitionController.class
 com\ndg\Server\Session_ME.class
-com\ndg\GUI\Application$2.class
+com\ndg\GUI\FeedBack.class
 com\ndg\Controllers\HomePageController.class
 com\ndg\Controllers\LoginController$1.class
 com\ndg\Controllers\MainProgramController.class
@@ -21,6 +22,7 @@ com\ndg\entities\JLabelCustom.class
 com\ndg\Controllers\MainProgramController$7.class
 com\ndg\GUI\ShowScheduleTest.class
 com\ndg\Controllers\ScheduleReTestController.class
+com\ndg\Controllers\ShowScheduleController$1.class
 com\ndg\GUI\Application.class
 com\ndg\Controllers\ProgramEduController.class
 com\ndg\Controllers\RegisterSubjectController$2.class
@@ -32,7 +34,6 @@ com\ndg\entities\JLabelCustom$1.class
 com\ndg\GUI\IApplication.class
 com\ndg\Controllers\LoginController.class
 com\ndg\GUI\ParentPanel.class
-com\ndg\GUI\Application$3.class
 com\ndg\Controllers\MainProgramController$1.class
 com\ndg\GUI\HomePage.class
 com\ndg\entities\Navigation.class
@@ -42,7 +43,6 @@ com\ndg\Controllers\MainProgramController$4.class
 com\ndg\Controllers\LoginController$2.class
 com\ndg\Server\Server.class
 com\ndg\Controllers\ShowScheduleController.class
-com\ndg\GUI\Application$4.class
 com\ndg\Controllers\MainProgramController$2.class
 com\ndg\GUI\LoginUI.class
 com\ndg\GUI\App.class

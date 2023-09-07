@@ -48,6 +48,7 @@ public class LoginController {
                             "Information",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+                    ConnectionSQL.checkStatus(loginUI.getIdLogin(), true);
                     loginUI.removeAll();
                     loginUI.setBackground(new Color(255, 255, 255));
                     MainProgram mainProgram = new MainProgram(loginUI.getIdLogin());
@@ -55,7 +56,6 @@ public class LoginController {
                     System.out.println("Login control: " + mainProgram.getIdLogin());
                     loginUI.revalidate();
                     loginUI.repaint();
-                    ConnectionSQL.checkStatus(loginUI.getIdLogin(), true);
                 }
                 else {
                     JOptionPane.showMessageDialog(

@@ -2,6 +2,7 @@ package com.ndg.ConnectionMySQL;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -34,6 +35,80 @@ public class ConnectionSQL {
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+
+
+    public synchronized static int getIdMajor(int idLogin) {
+        String query = """
+                select idNganhInfo from mainclass
+                where classCode like (select classCode from students where idAcc = %d)""".formatted(idLogin);
+        System.out.println(query);
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                return Integer.parseInt(resultSet.getString("idNganhInfo"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+
+
+
+    public synchronized static int namNH(int idLogin) {
+        String query = "SELECT NamNH FROM khoa_info where idKhoa like (select idKhoa from nganh_info where idNganhInfo like %d)".formatted(getIdMajor(idLogin));
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                return Integer.parseInt(resultSet.getString("NamNH"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+
+
+
+
+    public synchronized static float namDT(int idLogin) {
+        String query = """
+                    SELECT NamDT FROM khoa where MaKhoa like (select MaKhoa from khoa_info where idKhoa like (
+                    select idKhoa from nganh_info where idNganhInfo like %d))
+                    """.formatted(getIdMajor(idLogin));
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                return Float.parseFloat(resultSet.getString("NamDT"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+
+
+
+
+    public synchronized static @Nullable String MaNganh(int idLogin) {
+        String query = "select MaNganh from nganh_info where idNganhInfo = %d".formatted(getIdMajor(idLogin));
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                return "%" + resultSet.getString("MaNganh") + "%";
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
 
@@ -107,11 +182,14 @@ public class ConnectionSQL {
     public synchronized static @NotNull HashMap<String, String> getInformationLogin(int idLogin) {
         HashMap<String, String> getInfo = new HashMap<>();
         String query = """
-                SELECT studentCode, studentName, sex, date_format(dob, "%d/%m/%Y") as dob, address, classCode, TenNganh, TenKhoa
+                SELECT studentCode, studentName, sex, date_format(dob, "%d/%m/%Y") as dob, address, students.classCode, nganh.TenNganh, khoa.TenKhoa
                 FROM students
-                INNER JOIN nganh ON students.MaNganh = nganh.MaNganh
-                INNER JOIN khoa ON khoa.MaKhoa = nganh.MaKhoa
-                WHERE idAcc = '""" + idLogin + "'";
+                inner JOIN mainclass ON mainclass.classCode = students.classCode
+                inner join nganh_info on nganh_info.idNganhInfo = mainclass.idNganhInfo
+                inner join nganh on nganh.MaNganh = nganh_info.MaNganh
+                inner join khoa_info on khoa_info.idKhoa = nganh_info.idKhoa
+                INNER JOIN khoa ON khoa.MaKhoa = khoa_info.MaKhoa
+                WHERE idAcc =\s""" + idLogin;
 
         try {
             statement = connection.createStatement();
@@ -138,8 +216,8 @@ public class ConnectionSQL {
     public synchronized static String getNganh(int idLogin) {
         String query = """
                 SELECT TenNganh FROM nganh
-                INNER JOIN students on students.MaNganh = nganh.MaNganh
-                WHERE idAcc = '""" + idLogin + "'";
+                INNER JOIN nganh_info on nganh_info.MaNganh = nganh.MaNganh
+                WHERE idNganhInfo = %d""".formatted(getIdMajor(idLogin));
         String result = "";
         try {
             statement = connection.createStatement();
@@ -157,18 +235,22 @@ public class ConnectionSQL {
 
     public synchronized static @NotNull Vector<Object[]> getDataTableClass(int idLogin) {
         Vector<Object[]> subjectRegister = new Vector<>();
+        String MaNganh = ConnectionSQL.MaNganh(idLogin);
+        int namNH = ConnectionSQL.namNH(idLogin);
+        String query1 = "set @classCode = concat('d', " + namNH + " % 2000, '%');";
         String query = """
                 SELECT subjects.subjectCode, subjects.subjectName, subjects.STC, lophp.NMH, lophp.TTH,
                                 lophp.classCode, lophp.soluong, lophp.TietBD, lophp.Thu, teachers.teacherName
                 FROM lophp
-                INNER JOIN subjects ON lophp.subjectCode = subjects.subjectCode
+                inner join subjects_detail on subjects_detail.subjectCode = lophp.subjectCode
+                inner join subjects on subjects.subjectCode = subjects_detail.subjectCode
                 INNER JOIN teachers ON teachers.teacherCode = lophp.teacherCode
-                WHERE subjects.MaNganh LIKE (SELECT MaNganh FROM students WHERE idAcc = %d)
-                        OR (subjects.MaNganh is null and subjects.MaKhoa is null)
-                ORDER BY subjectName ASC;""".formatted(idLogin);
+                WHERE (subjects_detail.MaNganh LIKE '%s' or subjects_detail.MaNganh is null) and (lophp.classCode like @classCode)
+                ORDER BY subjectName ASC;""".formatted(MaNganh);
 
         try {
             statement = connection.createStatement();
+            statement.execute(query1);
             ResultSet resultSet = statement.executeQuery(query);
             HashMap<String, Boolean> checkSubjectRegis = ConnectionSQL.getSub(idLogin);
             while (resultSet.next()) {
@@ -245,14 +327,19 @@ public class ConnectionSQL {
 
     public synchronized static @NotNull Vector<String> showTextSubjectRegister(int idLogin) {
         Vector<String> result = new Vector<>();
+        String MaNganh = ConnectionSQL.MaNganh(idLogin);
+        int namNH = ConnectionSQL.namNH(idLogin);
+        String query1 = "set @classCode = concat('d', " + namNH + " % 2000, '%');";
         String query = """
                 SELECT subjects.subjectCode, subjects.subjectName, subjects.STC
                 FROM lophp
                 INNER JOIN subjects ON subjects.subjectCode = lophp.subjectCode
-                WHERE subjects.MaNganh LIKE (SELECT MaNganh FROM students WHERE idAcc = '""" + idLogin + "')";
+                INNER JOIN subjects_detail on subjects_detail.subjectCode = subjects.subjectCode
+                WHERE (subjects_detail.MaNganh LIKE '%s' or subjects_detail.MaNganh is null) and (lophp.classCode like @classCode)""".formatted(MaNganh);
 
         try {
             statement = connection.createStatement();
+            statement.execute(query1);
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 String input = resultSet.getString("subjectCode").toUpperCase() + " - " +
@@ -356,18 +443,11 @@ public class ConnectionSQL {
     public synchronized static @NotNull Vector<Object[]> getAllSubjectInMajor(int idLogin) {
         Vector<Object[]> getSubject = new Vector<>();
         String query = """
-                select subjectCode, subjectName, STC, KH
-                from subjects
-                where subjects.MaNganh in (
-                		select MaNganh from students where idAcc =""" +
-                idLogin + """
-                ) or (subjects.MaNganh is null and (subjects.MaKhoa is null or subjects.MaKhoa in (
-                	select MaKhoa from khoa where MaNganh in (
-                		select MaNganh from students where idAcc =""" +
-                idLogin + """
-                    )
-                )))
-                order by KH asc , subjectName asc""";
+                select subjects.subjectCode, subjects.subjectName, subjects.STC, subjects_detail.HocKi
+                from subjects_detail
+                inner join subjects on subjects.subjectCode = subjects_detail.subjectCode
+                where MaNganh like '%s'
+                order by HocKi asc , subjectName asc""".formatted(MaNganh(idLogin));
 
 
         try {
@@ -381,7 +461,7 @@ public class ConnectionSQL {
                         resultSet.getString("subjectCode").toUpperCase(),
                         resultSet.getString("subjectName"),
                         resultSet.getString("STC"),
-                        resultSet.getString("KH"),
+                        resultSet.getString("HocKi"),
                         "Đã học"
                 };
                 getSubject.add(objects);
@@ -457,24 +537,10 @@ public class ConnectionSQL {
     public static @NotNull Vector<String> getYearNH(int idLogin) {
         Vector<String> getData = new Vector<>();
         String formatSchedule = "Kì %d Năm học %d - %d";
-        int namNH = 0;
-        float namDT = 0;
-        String query = """
-                select namNH, khoa.NamDT from students
-                inner join nganh on nganh.MaNganh = students.MaNganh
-                inner join khoa on khoa.MaKhoa = nganh.MaKhoa
-                where idAcc = %d""".formatted(idLogin);
+        int namNH = ConnectionSQL.namNH(idLogin);
+        float namDT = ConnectionSQL.namDT(idLogin);
 
-        try {
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                namNH = Integer.parseInt(resultSet.getString("namNH"));
-                namDT = Float.parseFloat(resultSet.getString("NamDT"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println(namNH + " " + namDT);
 
         int m = (int) (namDT * 2);
         byte k = 0;
